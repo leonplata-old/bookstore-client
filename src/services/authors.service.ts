@@ -1,6 +1,6 @@
 import { IHttpService, IPromise } from 'angular';
 import { Inject, inject } from 'angular-ts';
-import { IAuthor } from '../interfaces/entities';
+import { IAuthorPagination } from '../interfaces/entities';
 import { IAuthorsService } from '../interfaces/services';
 
 @Inject(['$http', 'API_URL',])
@@ -13,9 +13,9 @@ export class AuthorsService implements IAuthorsService {
     inject(this, args);
   }
 
-  getAuthors(): IPromise<IAuthor[]> {
+  getAuthors(): IPromise<IAuthorPagination> {
     return this.$http
       .get(`${this.API_URL}/authors`, )
-      .then(response => response.data) as IPromise<IAuthor[]>;
+      .then(response => response.data) as IPromise<IAuthorPagination>;
   }
 }

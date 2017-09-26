@@ -17,7 +17,8 @@ import { AuthorSelectComponent } from './components/author-select/author-select.
 
 export default ngRegister('app', [uiRouter, 'ui.bootstrap'])
 
-  .constant('API_URL', 'http://ubuntu.local:8765')
+  .constant('API_URL', 'http://ubuntu.local:8765/api')
+  .constant('MAX_REQUEST_TIMEOUT_MS', 1000)
 
   .config(RouterConfig)
   .config(HttpConfig)

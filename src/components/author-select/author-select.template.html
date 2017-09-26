@@ -1,3 +1,14 @@
 <fieldset>
   <legend>Lista de autores</legend>
+  <div class="panel panel-default">
+    <div class="panel-heading">Nombre</div>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="selection in $ctrl.formState.selections">
+        <label>
+          <span ng-bind="selection.author.name"></span>
+        </label>
+        <input ng-model="selection.selected" class="pull-right" type="checkbox">
+      </li>
+    </ul>
+  </div>
 </fieldset>
