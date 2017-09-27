@@ -32,8 +32,9 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 text-center">
+      <div class="col-xs-12 col-sm-4 col-sm-offset-4 text-center form-action-bar">
           <input class="btn btn-primary" type="submit" value="Guardar" ng-disabled="bookForm.$invalid">
+          <button class="btn btn-default" type="button" ng-click="$ctrl.cancel()">Cancelar</button>
       </div>
     </div>
   </form>

@@ -1,7 +1,7 @@
 import './book-editor.style.scss';
 import autobind from 'autobind-decorator'
 import { IScope, IQService, IPromise } from 'angular';
-import { StateParams } from '@uirouter/angularjs';
+import { StateParams, StateService } from '@uirouter/angularjs';
 import { Inject, inject, NgComponent, NgOnInit } from 'angular-ts';
 import { IBooksService, IAuthorsService } from '../../interfaces/services';
 import { IBook, IAuthor, FormState, IAuthorSelection, IBookAuthorAssociation } from '../../interfaces/entities';
@@ -14,12 +14,13 @@ export interface CalendarState {
   selector: 'tt-book-editor',
   template: require('./book-editor.template.html'),
 })
-@Inject(['$scope', '$q', '$stateParams',  'BooksService', 'AuthorsService'])
+@Inject(['$scope', '$q', '$stateParams', '$state', 'BooksService', 'AuthorsService'])
 export class BookEditorComponent implements NgOnInit {
 
   $scope: IScope;
   $q: IQService;
   $stateParams: StateParams;
+  $state: StateService;
   BooksService: IBooksService;
   AuthorsService: IAuthorsService;
   calendarState: CalendarState;
@@ -49,7 +50,7 @@ export class BookEditorComponent implements NgOnInit {
     alert(err.message);
   }
 
-  $onInit () : void {
+  $onInit (): void {
     this.$q.all([
       this.AuthorsService.getAuthors(),
       this.BooksService.getBookById(this.bookId),
@@ -77,7 +78,7 @@ export class BookEditorComponent implements NgOnInit {
     });
   }
 
-  openCalendar () {
+  openCalendar (): void {
     this.calendarState.open = true;
   }
 
@@ -105,9 +106,13 @@ export class BookEditorComponent implements NgOnInit {
     });
   }
 
-  submit () {
+  cancel (): void {
+    this.$state.go('books');
+  }
+
+  submit (): void {
     this.$q.all([ this.updateBook(), this.updateAssociations() ])
-      .then(() => console.log('updated'))
+      .then(() => this.$state.go('books'))
       .catch(this.handleError);
   }
 }
