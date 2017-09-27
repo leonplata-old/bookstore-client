@@ -1,14 +1,44 @@
 <div>
-  <h1>Libros</h1>
+  <h1>Listar libros</h1>
   <div class="panel panel-default">
-    <div class="panel-heading">Libros disponibles</div>
-    <ul class="list-group">
-      <li class="list-group-item" ng-repeat="book in $ctrl.books">
-        <span ng-bind="book.title"></span>
-        <div class="pull-right">
-          <a ui-sref="books.editor({ bookId: book.id_book })">Editar</a>
-        </div>
-      </li>
-    </ul>
+      <div class="panel-body">
+          <button class="btn btn-default" ui-sref="books.editor({bookId: null})">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Agregar libro</span>
+          </button>
+      </div>
   </div>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th ng-click="$ctrl.sortBy('title')">
+          <span>Titulo</span>
+          <div class="pull-right">
+            <span class="glyphicon" ng-show="$ctrl.property === 'title'" ng-class="$ctrl.getSortIcon()"></span>
+          </div>
+        </th>
+        <th ng-click="$ctrl.sortBy('edition_date')">
+          <span>Edicion</span>
+          <div class="pull-right">
+            <span class="glyphicon" ng-show="$ctrl.property === 'edition_date'" ng-class="$ctrl.getSortIcon()"></span>
+          </div>
+        </th>
+        <th ng-click="$ctrl.sortBy('authors.length')">
+          <span>Autores</span>
+          <div class="pull-right">
+            <span class="glyphicon" ng-show="$ctrl.property === 'authors.length'" ng-class="$ctrl.getSortIcon()"></span>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="book in $ctrl.books | orderBy:$ctrl.property:$ctrl.reverse">
+        <td ng-bind="book.title"></td>
+        <td ng-bind="book.edition_date | date: 'yyyy-MM-dd'"></td>
+        <td ng-bind="book.authors.length"></td>
+        <td><a ui-sref="books.editor({ bookId: book.id_book })">Editar</a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>

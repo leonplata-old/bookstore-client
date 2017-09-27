@@ -1,4 +1,7 @@
 <div>
+  <div class="toaster" ng-if="$ctrl.toasterVisible">
+    Cambios guardados!
+  </div>
   <h2 ng-if="!$ctrl.bookId">Agregar libro</h2>
   <h2 ng-if="$ctrl.bookId">Editar libro</h2>
   <form name="bookForm" ng-submit="$ctrl.submit()">
@@ -10,16 +13,16 @@
               <div class="form-group">
                 <label for="inputTitle" class="col-sm-2 control-label">Titulo</label>
                   <div class="col-sm-10">
-                    <input name="inputTitle" ng-model="$ctrl.title" type="text" class="form-control" id="inputTitle" placeholder="Titulo" ng-required="true">
+                    <input name="inputTitle" ng-model="$ctrl.state.title" type="text" class="form-control" id="inputTitle" placeholder="Titulo" ng-required="true">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="inputEdition" class="col-sm-2 control-label">Edicion</label>
                   <div class="col-sm-10">
                     <div class="input-group">
-                        <input name="inputEdition" ng-model="$ctrl.edition" type="text" class="form-control" uib-datepicker-popup="yyyy/MM/dd" ng-required="true" is-open="$ctrl.calendarState.open" />
+                        <input name="inputEdition" ng-model="$ctrl.state.edition_date" type="text" class="form-control" uib-datepicker-popup="yyyy/MM/dd" ng-required="true" is-open="$ctrl.datePickerState.open" />
                         <span class="input-group-btn">
-                          <button type="button" class="btn btn-default" ng-click="$ctrl.openCalendar()"><i class="glyphicon glyphicon-calendar"></i></button>
+                          <button type="button" class="btn btn-default" ng-click="$ctrl.openDatePicker()"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                     </div>
                   </div>
@@ -28,12 +31,13 @@
         </fieldset>
       </div>
       <div class="col-md-6">
-        <tt-author-select form-state="$ctrl.formState"></tt-author-select>
+        <tt-author-select form-state="$ctrl.state"></tt-author-select>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 text-center">
+      <div class="col-xs-12 col-sm-4 col-sm-offset-4 text-center form-action-bar">
           <input class="btn btn-primary" type="submit" value="Guardar" ng-disabled="bookForm.$invalid">
+          <button class="btn btn-default" type="button" ng-click="$ctrl.cancel()">Cancelar</button>
       </div>
     </div>
   </form>
