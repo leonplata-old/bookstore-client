@@ -1,8 +1,8 @@
 import './author-select.style.scss';
 
-import { NgComponent } from 'angular-ts';
+import { NgComponent, inject } from 'angular-ts';
 import { IAuthorsService } from '../../interfaces/services';
-import { FormState } from '../../interfaces/entities';
+import { IBookFormState } from '../../interfaces/entities';
 
 @NgComponent({
   selector: 'tt-author-select',
@@ -11,5 +11,9 @@ import { FormState } from '../../interfaces/entities';
 })
 export class AuthorSelectComponent {
 
-  formState: FormState;
+  formState: IBookFormState;
+
+  constructor (...args: any[]) {
+    inject(this, args);
+  }
 }

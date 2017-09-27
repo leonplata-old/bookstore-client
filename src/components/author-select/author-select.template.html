@@ -3,11 +3,11 @@
   <div class="panel panel-default">
     <div class="panel-heading">Nombre</div>
     <ul class="list-group">
-      <li class="list-group-item" ng-repeat="selection in $ctrl.formState.selections">
+      <li class="list-group-item" ng-repeat="authorAssociation in $ctrl.formState.authorAssociations">
         <label>
-          <span ng-bind="selection.author.name"></span>
+          <span ng-bind="authorAssociation.author.name"></span>
         </label>
-        <input ng-model="selection.selected" class="pull-right" type="checkbox">
+        <input ng-model="authorAssociation.selected" class="pull-right" type="checkbox">
       </li>
     </ul>
   </div>

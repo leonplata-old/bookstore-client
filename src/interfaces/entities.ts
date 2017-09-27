@@ -17,13 +17,15 @@ export interface IBookPagination {
   books: IBook[];
 }
 
-export interface IAuthorSelection {
+export interface IAuthorAssociation {
   author: IAuthor;
   selected: boolean;
 }
 
-export interface FormState {
-  selections: IAuthorSelection[];
+export interface IBookFormState {
+  title: string;
+  edition_date: Date;
+  authorAssociations: IAuthorAssociation[];
 }
 
 export interface IBookAuthorAssociation {

@@ -7,6 +7,35 @@ tt-book-editor {
     display: flex;
     justify-content: space-between;
   }
+
+  .toaster {
+    z-index: 9999;
+    position: fixed;
+    top: -100px;
+    right: 20px;
+    background: green;
+    color: white;
+    padding: 20px;
+    animation: 3s slideUpDownUp;
+  }
+
+  @keyframes slideUpDownUp {
+    0% {
+      top: -100px;
+    }
+
+    20% {
+      top: 20px;
+    }
+
+    80% {
+      top: 20px;
+    }
+
+    100% {
+      top: -100px;
+    }
+  }
 }
 
 
