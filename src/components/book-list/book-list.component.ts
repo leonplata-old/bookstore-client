@@ -31,10 +31,7 @@ export class BookListComponent implements NgOnInit {
 
   $onInit () {
     this.BooksService.getBooks()
-      .then(pagination => {
-        this.books = pagination.books
-        console.log(this.books)
-      })
+      .then(pagination => this.books = pagination.books)
       .catch(err => alert(err));
   }
 
