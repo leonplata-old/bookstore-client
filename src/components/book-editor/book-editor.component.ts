@@ -1,6 +1,7 @@
 import './book-editor.style.scss';
 import autobind from 'autobind-decorator'
 import { IScope, IQService, IPromise } from 'angular';
+import { StateParams } from '@uirouter/angularjs';
 import { Inject, inject, NgComponent, NgOnInit } from 'angular-ts';
 import { IBooksService, IAuthorsService } from '../../interfaces/services';
 import { IBook, IAuthor, FormState, IAuthorSelection, IBookAuthorAssociation } from '../../interfaces/entities';
@@ -12,15 +13,13 @@ export interface CalendarState {
 @NgComponent({
   selector: 'tt-book-editor',
   template: require('./book-editor.template.html'),
-  bindings: { bookId: '<' }
 })
-@Inject(['$scope', '$q',  'BooksService', 'AuthorsService'])
+@Inject(['$scope', '$q', '$stateParams',  'BooksService', 'AuthorsService'])
 export class BookEditorComponent implements NgOnInit {
-
-  DUMMY_BOOK_ID: number = 1;
 
   $scope: IScope;
   $q: IQService;
+  $stateParams: StateParams;
   BooksService: IBooksService;
   AuthorsService: IAuthorsService;
   calendarState: CalendarState;
@@ -35,6 +34,7 @@ export class BookEditorComponent implements NgOnInit {
   constructor (...args: any[]) {
     inject(this, args);
 
+    this.bookId = this.$stateParams.bookId;
     this.calendarState = { open: false }
     this.formState = {
       selections: []
@@ -45,11 +45,6 @@ export class BookEditorComponent implements NgOnInit {
   }
 
   @autobind
-  propagateBook (book: IBook): void {
-    this.$scope.$broadcast('book-ready', book);
-  }
-
-  @autobind
   handleError (err: Error): void {
     alert(err.message);
   }
@@ -57,7 +52,7 @@ export class BookEditorComponent implements NgOnInit {
   $onInit () : void {
     this.$q.all([
       this.AuthorsService.getAuthors(),
-      this.BooksService.getBookById(this.DUMMY_BOOK_ID),
+      this.BooksService.getBookById(this.bookId),
     ])
       .then(([{ authors }, book]) => {
         this.title = book.title;
@@ -100,11 +95,11 @@ export class BookEditorComponent implements NgOnInit {
     }
 
     this.prevFormState.selections = this.formState.selections.map(selection => ({...selection}));
-    return this.BooksService.associateAuthors(this.DUMMY_BOOK_ID, { add: addedIds, remove: removedIds })
+    return this.BooksService.associateAuthors(this.bookId, { add: addedIds, remove: removedIds })
   }
 
   updateBook (): IPromise<any> {
-    return this.BooksService.updateBookById(this.DUMMY_BOOK_ID, {
+    return this.BooksService.updateBookById(this.bookId, {
       title: this.title,
       edition_date: this.edition,
     });

@@ -14,6 +14,7 @@ import { AuthorsService } from './services/authors.service';
 import { BookEditorComponent } from './components/book-editor/book-editor.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { AuthorSelectComponent } from './components/author-select/author-select.component';
+import { BookListComponent } from './components/book-list/book-list.component';
 
 export default ngRegister('app', [uiRouter, 'ui.bootstrap'])
 
@@ -29,5 +30,6 @@ export default ngRegister('app', [uiRouter, 'ui.bootstrap'])
   .component(BookEditorComponent)
   .component(LayoutComponent)
   .component(AuthorSelectComponent)
+  .component(BookListComponent)
 
   .module();
