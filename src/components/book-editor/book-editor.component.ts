@@ -62,7 +62,12 @@ export class BookEditorComponent implements NgOnInit {
       : [ this.fetchAuthors() ];
 
       this.$q.all(fetchedResources)
-        .then(() => this.setState())
+        .then(() => {
+          this.setState();
+          // WORKAROUND: setState is being called twice in order to set
+          // the previous state equals to the current one.
+          this.setState();
+        })
         .catch(this.handleError);
   }
 
@@ -116,12 +121,12 @@ export class BookEditorComponent implements NgOnInit {
     this.datePickerState.open = true;
   }
 
-  updateBookAssociations (): IPromise<any> {
+  createAssociationPayload (): any {
     const addedIds: number[] = [];
     const removedIds: number[] = [];
 
     for (let i = 0; i < this.state.authorAssociations.length; i++) {
-      if (this.state.authorAssociations[i] === this.previousState.authorAssociations[i]) {
+      if (this.state.authorAssociations[i].selected === this.previousState.authorAssociations[i].selected) {
         continue;
       }
       const association = this.state.authorAssociations[i];
@@ -129,7 +134,12 @@ export class BookEditorComponent implements NgOnInit {
       ids.push(association.author.id_author);
     }
 
-    return this.BooksService.associateAuthors(this.bookId, { add: addedIds, remove: removedIds })
+    return { add: addedIds, remove: removedIds };
+  }
+
+  updateBookAssociations (): IPromise<any> {
+    const associationDetail = this.createAssociationPayload();
+    return this.BooksService.associateAuthors(this.bookId, associationDetail);
   }
 
   showToaster() {
@@ -143,7 +153,9 @@ export class BookEditorComponent implements NgOnInit {
       edition_date: this.state.edition_date,
     };
     return this.BooksService.updateBookById(this.bookId, updatedBook)
-      .then(book => this.book = book);
+      .then(book => {
+        this.book = book
+      });
   }
 
   cancel (): void {
@@ -155,6 +167,11 @@ export class BookEditorComponent implements NgOnInit {
       .then(() => {
         this.setState();
         this.showToaster();
+
+        // UGLY WORKAROUND: The server sometimes returns books without updated
+        // authors, meanwhile the associations will be taken from the client
+        // until it's fixed on server side.
+        this.state.authorAssociations = this.previousState.authorAssociations;
       })
       .catch(this.handleError);
   }
