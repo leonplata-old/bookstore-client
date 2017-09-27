@@ -15,6 +15,7 @@ export class BooksService implements IBooksService {
 
   private parseBook (rawBook: any) : IBook {
     return {
+      id_book: rawBook.id_book,
       title: rawBook.title,
       edition_date: new Date(rawBook.edition_date),
       authors: rawBook.authors,
@@ -38,7 +39,7 @@ export class BooksService implements IBooksService {
   getBookById (bookId: number): IPromise<IBook> {
     return this.$http
       .get(`${this.API_URL}/books/${bookId}`)
-      .then<IBook>(response => {
+      .then<IBook>((response) => {
         const rawBook = (response.data as any).book;
         return this.parseBook(rawBook);
       }) as IPromise<IBook>;
@@ -48,9 +49,10 @@ export class BooksService implements IBooksService {
     return this.$http
       .put(`${this.API_URL}/books/${bookId}`, {
         ...newBook,
+        id_book: undefined,
         edition_date: this.stringifyDate(newBook.edition_date)
       })
-      .then<IBook>(response => {
+      .then<IBook>((response) => {
         const rawBook = (response.data as any).book;
         return this.parseBook(rawBook);
       }) as IPromise<IBook>;
@@ -60,5 +62,22 @@ export class BooksService implements IBooksService {
     return this.$http
       .patch(`${this.API_URL}/books/${bookId}/authors`, association)
       .then(response => response.data) as IPromise<any>;
+  }
+
+  createBook (newBook: IBook): IPromise<IBook> {
+    return this.$http
+      .post(`${this.API_URL}/books`, {
+        ...newBook,
+        id_book: undefined,
+        edition_date: this.stringifyDate(newBook.edition_date)
+      })
+      .then<IBook>((response) => {
+        const rawBook = (response.data as any).book;
+        return this.parseBook(rawBook);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      }) as IPromise<IBook>
   }
 }

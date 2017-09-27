@@ -1,4 +1,5 @@
 export interface IBook {
+  id_book?: number;
   title: string;
   edition_date: Date;
   authors?: IAuthor[];

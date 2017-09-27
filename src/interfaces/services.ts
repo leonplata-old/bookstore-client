@@ -6,6 +6,7 @@ export interface IBooksService {
   getBookById (bookId: number): IPromise<entities.IBook>;
   updateBookById(bookId: number, newBook: entities.IBook): IPromise<entities.IBook>;
   associateAuthors (bookId: number, association: entities.IBookAuthorAssociation): IPromise<any>;
+  createBook (book: entities.IBook): IPromise<entities.IBook>;
 }
 
 export interface IAuthorsService {
