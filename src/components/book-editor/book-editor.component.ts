@@ -64,14 +64,35 @@ export class BookEditorComponent implements NgOnInit {
       this.$q.all(fetchedResources)
         .then(() => {
           this.setState();
+
           // WORKAROUND: setState is being called twice in order to set
-          // the previous state equals to the current one.
+          // the previous state equals to the current one, then the first
+          // book update will not send unneccesary author ids to be removed.
           this.setState();
         })
         .catch(this.handleError);
   }
 
-  private isValidBookId() {
+  openDatePicker (): void {
+    this.datePickerState.open = true;
+  }
+
+  @autobind
+  showToaster () {
+    this.toasterVisible = true;
+    this.$timeout(() => this.toasterVisible = false, 3000);
+  }
+
+  cancel (): void {
+    this.$state.go('books');
+  }
+
+  submit (): IPromise<any> {
+    const takenAction = this.isValidBookId() ? this.updateBook() : this.createBook();
+    return takenAction.catch(this.handleError);
+  }
+
+  private isValidBookId () {
     return !Number.isNaN(this.bookId)
   }
 
@@ -117,11 +138,7 @@ export class BookEditorComponent implements NgOnInit {
     return authorAssociations;
   }
 
-  openDatePicker (): void {
-    this.datePickerState.open = true;
-  }
-
-  createAssociationPayload (): any {
+  private createAssociationPayload (): any {
     const addedIds: number[] = [];
     const removedIds: number[] = [];
 
@@ -137,52 +154,51 @@ export class BookEditorComponent implements NgOnInit {
     return { add: addedIds, remove: removedIds };
   }
 
-  updateBookAssociations (): IPromise<any> {
+  @autobind
+  private updateBookAssociations (): IPromise<any> {
     const associationDetail = this.createAssociationPayload();
     return this.BooksService.associateAuthors(this.bookId, associationDetail);
   }
 
-  showToaster() {
-    this.toasterVisible = true;
-    this.$timeout(() => this.toasterVisible = false, 3000);
-  }
-
-  updateBookFields (): IPromise<any> {
+  private updateBookFields (): IPromise<any> {
     const updatedBook: IBook = {
       title: this.state.title,
       edition_date: this.state.edition_date,
     };
     return this.BooksService.updateBookById(this.bookId, updatedBook)
-      .then(book => {
-        this.book = book
-      });
+      .then(book => this.book = book);
   }
 
-  cancel (): void {
-    this.$state.go('books');
-  }
-
-  updateBook (): IPromise<any> {
+  private updateBook (): IPromise<any> {
     return this.$q.all([ this.updateBookFields(), this.updateBookAssociations() ])
       .then(() => {
         this.setState();
         this.showToaster();
 
-        // UGLY WORKAROUND: The server sometimes returns books without updated
-        // authors, meanwhile the associations will be taken from the client
-        // until it's fixed on server side.
+        // WORKAROUND: The server sometimes returns books without updated
+        // authors, meanwhile the associations will be taken from the
+        // previous state until it's fixed on server side.
         this.state.authorAssociations = this.previousState.authorAssociations;
+      });
+  }
+
+  private createBook (): IPromise<any> {
+    const newBook: IBook = {
+      title: this.state.title,
+      edition_date: this.state.edition_date,
+    };
+    return this.BooksService.createBook(newBook)
+      .then((book) => {
+        this.book = book;
+        this.bookId = book.id_book || 0;
       })
-      .catch(this.handleError);
+      .then(this.updateBookAssociations)
+      .then(this.refreshPage)
   }
 
-  createBook (): IPromise<any> {
-    return this.$q.resolve();
-  }
-
-  submit (): IPromise<any> {
-    return this.isValidBookId()
-      ? this.updateBook()
-      : this.createBook();
+  @autobind
+  private refreshPage () {
+    const stateParams = { bookId: this.book.id_book };
+    this.$state.go(this.$state.current, stateParams, { reload: true });
   }
 }
