@@ -1,12 +1,51 @@
 <div>
   <h1>Listar libros</h1>
   <div class="panel panel-default">
-      <div class="panel-body">
-          <button class="btn btn-default" ui-sref="books.editor({bookId: null})">
-            <i class="glyphicon glyphicon-plus"></i>
-            <span>Agregar libro</span>
-          </button>
+    <div class="panel-body">
+      <button class="btn btn-default" ui-sref="books.editor({bookId: null})">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>Agregar libro</span>
+      </button>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label for="inputTitle" class="col-sm-2 control-label">Titulo</label>
+              <div class="col-sm-10">
+                <input name="inputTitle" ng-model="$ctrl.search.title" type="text" class="form-control" id="inputTitle" placeholder="Titulo">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEdition" class="col-sm-2 control-label">Edicion</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <input name="inputEdition" ng-model="$ctrl.search.edition_date" type="text" class="form-control" uib-datepicker-popup="yyyy/MM/dd"
+                    ng-required="true" is-open="$ctrl.datePickerState.open" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="$ctrl.openDatePicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label for="inputAuthors" class="col-sm-2 control-label">Autores</label>
+              <div class="col-sm-10">
+                <input name="inputTitle" ng-model="$ctrl.search.authors" type="text" class="form-control" id="inputAuthors" placeholder="Numero autores"
+                  ng-required="true">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
   <table class="table table-bordered table-striped">
     <thead>
@@ -33,7 +72,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="book in $ctrl.books | orderBy:$ctrl.property:$ctrl.reverse">
+      <tr ng-repeat="book in $ctrl.books | orderBy:$ctrl.property:$ctrl.reverse | filter:$ctrl.searchFilter">
         <td ng-bind="book.title"></td>
         <td ng-bind="book.edition_date | date: 'yyyy-MM-dd'"></td>
         <td ng-bind="book.authors.length"></td>

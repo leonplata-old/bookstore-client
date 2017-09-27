@@ -4,11 +4,8 @@ import { IScope, IQService, IPromise, ITimeoutService } from 'angular';
 import { StateParams, StateService } from '@uirouter/angularjs';
 import { Inject, inject, NgComponent, NgOnInit } from 'angular-ts';
 import { IBooksService, IAuthorsService } from '../../interfaces/services';
-import { IBook, IAuthor, IBookFormState, IAuthorAssociation, IBookAuthorAssociation } from '../../interfaces/entities';
-
-export interface IDatePickerState {
-  open: boolean;
-}
+import { IBook, IAuthor, IBookFormState, IAuthorAssociation,
+  IBookAuthorAssociation, IDatePickerState } from '../../interfaces/entities';
 
 const toObjectMap = (array: any[], property: string): any => {
   return array.reduce((map, item) => {

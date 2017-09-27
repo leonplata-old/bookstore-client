@@ -33,7 +33,11 @@ export class BooksService implements IBooksService {
   getBooks (): IPromise<IBookPagination> {
     return this.$http
       .get(`${this.API_URL}/books`)
-      .then(response => response.data) as IPromise<IBookPagination>;
+      .then(response => response.data)
+      .then((data: any) => {
+        data.books = data.books.map((book: any) => this.parseBook(book))
+        return data;
+      }) as IPromise<IBookPagination>;
   }
 
   getBookById (bookId: number): IPromise<IBook> {
@@ -74,10 +78,6 @@ export class BooksService implements IBooksService {
       .then<IBook>((response) => {
         const rawBook = (response.data as any).book;
         return this.parseBook(rawBook);
-      })
-      .catch((err) => {
-        console.log(err);
-        throw err;
       }) as IPromise<IBook>
   }
 }

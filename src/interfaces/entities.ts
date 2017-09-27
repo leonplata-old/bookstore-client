@@ -33,3 +33,7 @@ export interface IBookAuthorAssociation {
   add?: number[];
   remove?: number[];
 }
+
+export interface IDatePickerState {
+  open: boolean;
+}
