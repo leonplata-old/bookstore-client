@@ -17,10 +17,18 @@ export function RouterConfig (
   $locationProvider.html5Mode(true);
 
   $stateProvider
-    .state('editor', {
-      url: '/editor',
-      component: 'ttBookEditor',
+    .state('books', {
+      url: '/books',
+      component: 'ttBookList',
+    })
+    .state('books.editor', {
+      url: '/:bookId',
+      views: {
+        '@': {
+          component: 'ttBookEditor',
+        },
+      },
     });
 
-  $urlRouterProvider.otherwise('/editor');
+  $urlRouterProvider.otherwise('/books');
 }

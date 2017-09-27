@@ -1,0 +1,14 @@
+<div>
+  <h1>Libros</h1>
+  <div class="panel panel-default">
+    <div class="panel-heading">Libros disponibles</div>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="book in $ctrl.books">
+        <span ng-bind="book.title"></span>
+        <div class="pull-right">
+          <a ui-sref="books.editor({ bookId: book.id_book })">Editar</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
